@@ -1,15 +1,13 @@
 // assets/js/autoload-events.js
-// Força o uso de caminho relativo ./assets/... para evitar quebrar no GitHub Pages (/winnerssite/).
-// Ignora ev.image do index.json e sempre monta a URL com base no slug.
-// Adiciona fallback relativo para placeholder.
+// Usa __BASE_PATH__ para montar URLs corretas no GitHub Pages.
 (async () => {
   try {
-    const url = `./assets/data/events/index.json?v=${Date.now()}`;
-    const r = await fetch(url, { cache: 'no-store' });
+    const BASE = window.__BASE_PATH__ || './';
+    const r = await fetch(`${BASE}assets/data/events/index.json?v=${Date.now()}`, { cache: 'no-store' });
     const events = await r.json();
     window.__EVENTS = events;
 
-    // Cria/encontra container
+    // Container
     let container = document.querySelector('#event-list, [data-event-list], .event-grid, .cards');
     if (!container) {
       const h1 = document.querySelector('h1');
@@ -20,23 +18,22 @@
       else document.body.appendChild(container);
     }
 
-    const html = events.map(ev => {
+    // Render
+    container.innerHTML = events.map(ev => {
       const slug = ev.slug;
-      const img = `./assets/img/banners/${slug}-hero.webp`;
-      const subtitle = ev.subtitle ? `<p>${ev.subtitle}</p>` : '';
+      const img = `${BASE}assets/img/banners/${slug}-hero.webp`;
+      const sub = ev.subtitle ? `<p>${ev.subtitle}</p>` : '';
       return `
         <article class="event-card">
-          <a href="./evento.html?slug=${slug}" aria-label="${ev.title}">
+          <a href="${BASE}evento.html?slug=${slug}" aria-label="${ev.title}">
             <img src="${img}" alt="${ev.title}" loading="lazy"
-                 onerror="this.onerror=null;this.src='./assets/img/banners/placeholder.webp'">
+                 onerror="this.onerror=null;this.src='${BASE}assets/img/banners/placeholder.webp'">
             <h2>${ev.title}</h2>
-            ${subtitle}
+            ${sub}
           </a>
         </article>
       `;
     }).join('');
-
-    container.innerHTML = html;
 
   } catch (e) {
     console.error('Erro ao carregar eventos:', e);
