@@ -1,0 +1,51 @@
+{
+  "events": [
+    {
+      "slug": "ccxp",
+      "title": "CCXP",
+      "subtitle": "O braço de negócios que conecta executivos, talentos e IPs globais",
+      "dateHuman": "02–06 Dez 2025",
+      "startDate": "2025-12-02",
+      "endDate": "2025-12-06"
+    }
+  ],
+  "reasons": {
+    "ccxp": [
+      {
+        "icon": "🎯",
+        "title": "Networking com decisores",
+        "desc": "Conecte-se com executivos e compradores do mercado de games e entretenimento."
+      },
+      {
+        "icon": "🧠",
+        "title": "Tendências e conteúdos",
+        "desc": "Palestras e ativações com insights práticos para planejamento."
+      },
+      {
+        "icon": "🤝",
+        "title": "Negócios B2B",
+        "desc": "Agenda otimizada para reuniões com expositores e parceiros."
+      }
+    ]
+  },
+  "hotels": {
+    "ccxp": [
+      {
+        "name": "Hotel Próximo ao São Paulo Expo",
+        "stars": 4,
+        "distance": "1,2 km do pavilhão",
+        "price": "Tarifa corporativa sob consulta",
+        "url": "https://wa.me/5511999999999?text=Quero%20roteiro%20para%20a%20CCXP",
+        "image": "/assets/img/banners/placeholder.webp"
+      },
+      {
+        "name": "Opção Econômica",
+        "stars": 3,
+        "distance": "3,8 km do pavilhão",
+        "price": "Tarifa dinâmica",
+        "url": "https://wa.me/5511999999999?text=Quero%20op%C3%A7%C3%B5es%20de%20hotel%20para%20a%20CCXP",
+        "image": "/assets/img/banners/placeholder.webp"
+      }
+    ]
+  }
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="referrer" content="no-referrer">
+  <title id="docTitle">Evento • WinnersTour</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css"/>
+<script></script>
+<script type="module" src="assets/js/event-page.js"></script>
+</head>
+<body class="wt-body">
+
+  <section class="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="chips">
+        <span class="chip" id="badge" style="display:none"><span id="badgeText"></span></span>
+        <span class="chip" id="chipDatePlace" style="display:none"><span id="chipDatePlaceText"></span></span>
+      </div>
+      <h2 id="evTitle" class="hero-title">TÍTULO</h2>
+      <p class="subtitle" id="evSubtitle">Subtítulo do evento</p>
+    </div>
+  </section>
+
+  <div class="wt-main-container">
+    
+    <section id="hotel-carousel" class="relative mt-8">
+      <h3 class="section-title">GARANTA SUA VIAGEM AGORA MESMO</h3>
+      <p class="section-lead">
+        Nossos roteiros foram desenhados para quem viaja a trabalho, otimizando seu tempo e custo durante a feira.
+        Clique <a id="whatsLink" href="https://wa.me/?text=Ol%C3%A1!%20Gostaria%20de%20receber%20a%20proposta%20dos%20roteiros%20de%20viagem%20para%20o%20evento." target="_blank" rel="noopener" class="link-wa">aqui para receber o roteiro detalhado no WhatsApp</a>, e escolha o que mais combina com a sua agenda.
+      </p>
+      <div class="relative overflow-hidden">
+        <button id="prevBtn" class="nav-btn left-1 sm:left-2" aria-label="Anterior" type="button">&#10094;</button>
+        <button id="nextBtn" class="nav-btn right-1 sm:right-2" aria-label="Próximo" type="button">&#10095;</button>
+        <div id="track" class="flex gap-4 transition-transform duration-200 ease-out will-change-transform"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title" id="motivosTitle">6 MOTIVOS PRA IR À <NOME FEIRA></h3>
+      <p class="section-lead">
+        Avaliando a viagem? Aqui vão os pontos que fazem a ida <strong>valer o investimento</strong> para a empresa: o que ver, com quem falar e como voltar com oportunidades reais no funil comercial.
+      </p>
+    </section>
+
+    <section id="motivos-carousel" class="mt-16">
+      <div class="relative overflow-hidden">
+        <button id="prevBtn2" class="nav-btn left-1 sm:left-2" aria-label="Anterior" type="button">&#10094;</button>
+        <button id="nextBtn2" class="nav-btn right-1 sm:right-2" aria-label="Próximo" type="button">&#10095;</button>
+        <div id="track2" class="flex gap-4 transition-transform duration-200 ease-out will-change-transform"></div>
+      </div>
+    </section>
+
+  </div> <footer class="wt-footer">
+    <div class="wt-container">© WinnersTour</div>
+  </footer>
+
+<script>
+(function(){
+  function getSlug(){ return new URLSearchParams(location.search).get("slug") || ""; }
+  async function load(){
+    const slug = getSlug();
+    if (!slug) return;
+    try {
+      const res = await fetch(`/api/event?slug=${encodeURIComponent(slug)}`);
+      if (!res.ok) throw new Error("Evento não encontrado");
+      const ev = await res.json();
+      window.__EVENT = ev; // compatibilidade com scripts existentes
+      if (typeof hydrateEventPage === "function") {
+        hydrateEventPage(ev);
+      } else {
+        // fallback mínimo: preencher título, banner se existirem no DOM
+        const t = document.querySelector("#event-title, .event-title, h1");
+        if (t) t.textContent = ev.title || "";
+        const b = document.querySelector("#event-banner, .event-banner, .hero img");
+        if (b) b.src = (ev.banner_path || (ev.seo && ev.seo.image) || `/assets/img/banners/${ev.slug}-banner.webp`);
+      }
+      document.dispatchEvent(new CustomEvent("event:loaded", { detail: ev }));
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  document.readyState !== "loading" ? load() : document.addEventListener("DOMContentLoaded", load);
+})();
+</script>
+</body>
+</html>

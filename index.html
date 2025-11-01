@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>WinnersTour — Eventos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/base.css">
+<script></script>
+</head>
+<body class="wt-body">
+  <header class="wt-header">
+    <div class="wt-container wt-header__inner">
+      <h1 class="wt-logo">WINNERSTOUR</h1>
+      <a class="wt-whats" id="whatsLinkIndex" href="https://wa.me/?text=Ol%C3%A1!%20Quero%20saber%20sobre%20os%20eventos." target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+  </header>
+
+  <main class="wt-container">
+    <h2 class="wt-title">Eventos</h2>
+    <div id="eventsGrid" class="cards-grid"></div>
+  </main>
+
+  <footer class="wt-footer">
+    <div class="wt-container">© WinnersTour</div>
+  </footer>
+
+  <script src="assets/js/index.js"></script>
+<script>
+(async () => {
+  try {
+    const res = await fetch("/api/events");
+    const { events } = await res.json();
+    // mantém compatibilidade com scripts existentes
+    window.__EVENTS = events;
+    // tenta renderização existente
+    if (typeof renderEventCards === "function") {
+      renderEventCards(events);
+    } else {
+      // fallback simples: preenche um container #events-list se existir
+      const list = document.querySelector("#events-list, .events-list, [data-events-list]");
+      if (list) {
+        list.innerHTML = events.map(ev => `
+          <a class="event-card" href="${ev.url}">
+            <img loading="lazy" src="${ev.banner}" alt="${ev.title}">
+            <h3>${ev.emoji ? ev.emoji + " " : ""}${ev.title}</h3>
+            <p>${ev.subtitle || ""}</p>
+          </a>
+        `).join("");
+      }
+    }
+    document.dispatchEvent(new CustomEvent("events:loaded", { detail: events }));
+  } catch (err) {
+    console.error("Falha ao carregar /api/events", err);
+  }
+})();
+</script>
+</body>
+</html>

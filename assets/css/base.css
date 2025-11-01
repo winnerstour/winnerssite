@@ -1,0 +1,378 @@
+:root{
+  --bg:#f4f4f5; --fg:#111827; --muted:#6b7280; --chip:#fde68a; --chip-fg:#111827;
+  --card:#fff; --border:#e5e7eb; --wa:#16a34a;
+  --bar-main:#FF5F2D;
+}
+*{box-sizing:border-box} html,body{margin:0;padding:0}
+body.wt-body{font-family:Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:var(--fg); background:var(--bg);}
+a{color:inherit;text-decoration:none}
+.wt-container{max-width:1100px;margin:0 auto;padding:0 16px}
+.wt-header{background:#fff;border-bottom:1px solid var(--border)}
+.wt-header__inner{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.wt-logo{font-weight:900;letter-spacing:.04em}
+.wt-whats{font-weight:700;color:var(--wa)}
+.wt-title{margin:24px 0 12px;font-size:28px;font-weight:900;letter-spacing:.03em}
+
+/* grid */
+.cards-grid{display:grid;gap:16px}
+@media(min-width:640px){.cards-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.cards-grid{grid-template-columns:repeat(4,1fr)}}
+
+.card{display:block;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transform:translateY(0);transition:transform .18s ease, box-shadow .18s ease}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.08)}
+.card__cover{position:relative;height:140px;background:#eee}
+.card__cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.card__body{padding:12px 14px}
+.card__title{font-weight:800;font-size:14px;display:flex;align-items:center;gap:8px;letter-spacing:.02em;text-transform:uppercase}
+.card__emoji{font-size:18px;display:inline-block}
+.card__desc{margin:8px 0 2px;color:var(--muted);font-size:13px;line-height:1.45}
+
+/* hero */
+.hero{position:relative;min-height:60vh;background:#000;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.65)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.55))}
+.hero-content{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#fff;padding:24px}
+.chips{margin-bottom:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--chip);color:var(--chip-fg);padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px}
+.hero-title{font-size:44px;font-weight:900;letter-spacing:.03em;margin:6px 0 8px;text-transform:uppercase}
+.subtitle{font-size:18px;max-width:820px;margin:0 auto;color:#f3f4f6}
+
+/* countdown (legacy) - REMOVIDO NO HTML */
+.countdown{background:var(--chip);color:var(--chip-fg);padding:8px 0;border-top:1px solid #f1c40f}
+.countdown .inner{max-width:1100px;margin:0 auto;text-align:center;font-weight:800}
+.cd-num{margin:0 6px;font-size:22px;letter-spacing:.03em}
+.cd-lbl{font-size:12px;margin-right:6px}
+.cd-rest{font-size:12px;font-weight:800}
+
+/* section */
+.section{padding:28px 0}
+.section-title{margin:0 0 8px 0;text-align:center;font-size:28px;font-weight:900;letter-spacing:.03em;text-transform:uppercase}
+.section-lead{max-width:820px;margin:0 auto 18px;text-align:center;color:var(--muted)}
+.section-sub{text-align:center;color:var(--muted);margin-top:-4px}
+
+/* NOVO: Estiliza o link do WhatsApp para destaque */
+.link-wa{
+    color: var(--wa); /* Cor verde */
+    font-weight: 800; /* Negrito */
+    text-decoration: underline; /* Sublinhado para indicar que é um link */
+    transition: color .15s ease;
+}
+.link-wa:hover{
+    color: #0e9b54; /* Verde mais escuro no hover */
+}
+
+/* carousel (legacy) */
+.carousel{position:relative}
+.carousel-track{display:flex;gap:16px;transition:transform .2s ease;will-change:transform;overflow:hidden}
+/* Regras antigas de .nav-btn removidas pois foram substituídas pelas de baixo */
+
+/* hotels (legacy) */
+/* ALTERADO: Fundo transparente e sem borda visível para o card do hotel */
+.hotel-card{
+  display:flex;flex-direction:column;align-items:center;text-align:center;min-width:min(340px,92%);
+  background:var(--bg); /* Transparente em relação ao body*/
+  border:1px solid transparent; /* Borda invisível */
+  border-radius:16px;overflow:hidden;
+  transform:translateY(0);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+/* REMOVIDO EFEITO HOVER */
+.hotel-card:hover{
+  transform:translateY(0);
+  box-shadow:none;
+}
+/* CORREÇÃO: Garante que a imagem dentro da capa seja arredondada */
+.hotel-card__cover, .hotel-card__cover img {
+    border-radius: 12px; /* Garante arredondamento da capa e da imagem */
+}
+.hotel-card__cover{width:100%;aspect-ratio:2/3;border-radius:12px;overflow:hidden;background:#eee;border:1px solid var(--border);margin-bottom:10px}
+.hotel-card__cover img{width:100%;height:100%;object-fit:cover}
+
+/* ALTERADO: Título do hotel menor */
+.hotel-card__title{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  font-weight:800; /* Diminuído de 900 para 800 */
+  font-size:13px; /* Diminuído de 14px para 13px */
+  letter-spacing:.02em;text-transform:uppercase
+}
+
+/* NOVO: Estilo para o bloco de texto combinado (Descrição + Distância/Preço) */
+.hotel-card-body-text {
+  color: var(--muted) !important; /* Cor igual a section-lead */
+  font-size: 14px; /* Tamanho do corpo de texto */
+  line-height: 1.35;
+  text-align: center;
+  /* Garante que o texto tenha o estilo de fonte normal da página */
+  font-family: Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 400; 
+}
+.hotel-card-body-text em {
+    font-weight: 600; /* Destaque em itálico para Distância */
+    font-style: italic;
+}
+.hotel-card-body-text strong {
+    font-weight: 900; /* Destaque em negrito para Preço */
+}
+
+/* MANTIDO: Regra antiga, mas o novo elemento hotel-card-body-text sobrepõe a necessidade */
+.hotel-card__text{
+  font-size:14px;
+  color:var(--muted); 
+  margin-top:4px
+}
+.hotel-card__btn{margin-top:10px;display:inline-block;width:100%;text-align:center;background:#2563eb;color:#fff;padding:8px 10px;border-radius:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+
+/* motivos (legacy) */
+.motivos-head{text-align:center;margin-bottom:10px}
+.motivos-chip{display:inline-flex;align-items:center;gap:6px;background:#fffbeb;color:#92400e;padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px}
+
+/* ALTERADO: Faz o card de motivo imitar o estilo .card/index.js */
+.motivos-track .motivo, .motivo {
+  background:#fff !important; /* Fundo branco forçado */
+  border:1px solid var(--border); /* Borda visível */
+  border-radius:16px; /* Bordas arredondadas */
+  overflow:hidden;
+  transform:translateY(0);
+  transition:transform .18s ease, box-shadow .18s ease;
+  padding:18px; /* Mantém o padding interno de motivo */
+}
+/* ALTERADO: Aplica o hover do .card/index.js */
+.motivo:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+  border-color: var(--border); /* Volta a cor da borda ao padrão */
+}
+
+/* ALTERADO: Tamanho do emoji reduzido pela metade (75px) e altura ajustada */
+.motivo__emoji{
+  text-align:center;
+  font-size:75px; /* Reduzido de 150px para 75px */
+  margin-bottom:6px;
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center;
+  height: 75px;
+}
+/* CORRIGIDO: Centralização do título (garantindo que se aplique) */
+.motivo__title{
+  text-align:center !important; /* FORÇA centralização do título */
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+  margin-bottom:6px
+}
+/* Corrigido o texto do motivo para herdar a cor do muted/section-lead */
+.motivo__text{color:var(--muted) !important;font-size:14px;line-height:1.55;text-align:center;}
+
+/* footer */
+.wt-footer{margin:24px 0;color:#6b7280;font-size:12px}
+
+
+/* === Winners fix: hero sizing (existing) === */
+@media (min-width: 1024px){
+  .hero{ min-height: 36vh; }
+  .hero-bg{ background-size: contain; background-repeat: no-repeat; background-position: center top; }
+}
+@media (max-width: 767px){
+  .hero{ min-height: auto; }
+  .hero-bg{ position: relative; height: auto; }
+}
+/* === end fix === */
+
+
+/* === Winners fix v2: Hero no-stretch & vignette (existing) === */
+.hero{ position:relative; overflow:hidden; background:#000; }
+.hero-bg{ position:relative; display:flex; align-items:center; justify-content:center; min-height:36vh; }
+.hero-bg img#heroImg{ display:block; height:36vh; width:auto; max-width:100%; object-fit:contain; }
+.hero::before{
+  content:"";
+  position:absolute; inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.6) 0%, rgba(0,0,0,0) 12%, rgba(0,0,0,0) 88%, rgba(0,0,0,.6) 100%);
+}
+@media (min-width: 1024px){
+  .hero{ min-height:36vh; }
+  .hero-bg{ min-height:36vh; }
+  .hero-bg img#heroImg{ height:36vh; }
+}
+@media (max-width: 767px){
+  .hero{ min-height:auto; }
+  .hero-bg{ min-height:auto; }
+  .hero-bg img#heroImg{ height:auto; width:100%; }
+}
+/* === end Winners fix v2 === */
+
+
+/* === Winners fix v3: remove dim, image-scoped vignette, white bg (corrected) === */
+.hero { background:#fff !important; } /* Corrigido para BRANCO ABSOLUTO para evitar fundo cinza */
+.hero-bg { filter:none !important; }
+.hero-overlay { display:none !important; background:none !important; }
+.hero-bg{ 
+  position:relative; display:flex; align-items:center; justify-content:center; 
+  min-height:36vh;
+  /* Garante que o fundo da hero-bg (onde a imagem não preenche) seja branco */
+  background-color: #fff !important; 
+}
+.hero-wrap{ position:relative; display:inline-block; line-height:0; }
+.hero-wrap img{ display:block; height:36vh; width:auto; max-width:100%; object-fit:contain; }
+
+/* Gradiente da vinheta branca, com fade-out mais rápido para o BRANCO TOTAL */
+.hero-wrap::before{
+  content:"";
+  position:absolute; inset:0; pointer-events:none;
+  background:
+    linear-gradient(90deg,
+      rgba(255,255,255,1) 0%,
+      rgba(255,255,255,0.7) 4%,
+      rgba(255,255,255,0.3) 8%,
+      rgba(255,255,255,0.1) 12%,
+      rgba(255,255,255,0.0) 20%,
+      rgba(255,255,255,0.0) 80%,
+      rgba(255,255,255,0.1) 88%,
+      rgba(255,255,255,0.3) 92%,
+      rgba(255,255,255,0.7) 96%,
+      rgba(255,255,255,1) 100%
+    );
+}
+@media (min-width:1024px){
+  .hero{ min-height:36vh !important; }
+  .hero-bg{ min-height:36vh !important; }
+  .hero-wrap img{ height:36vh !important; }
+}
+@media (max-width:767px){
+  .hero{ min-height:auto !important; }
+  .hero-bg{ min-height:auto !important; }
+  .hero-wrap img{ height:auto !important; width:100% !important; }
+}
+/* === end v3 === */
+
+
+/* v5 / v14.8 – escopo dos botões só dentro dos carrosséis (existing) */
+#hotel-carousel, #motivos-carousel { position: relative; }
+#hotel-carousel .nav-btn, #motivos-carousel .nav-btn {
+  position:absolute; top:50%; transform:translateY(-50%);
+  z-index:5; 
+  width:36px; height:36px; border-radius:9999px;
+  
+  /* CORREÇÃO: Fundo Laranja, Ícone Preto */
+  background:var(--bar-main) !important; /* Laranja da barra principal */
+  color: #111 !important; /* Preto para a seta/ícone (substituindo var(--bar-dark)) */
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
+  
+  display:flex; align-items:center; justify-content:center; opacity:.9; border:0; cursor:pointer;
+}
+#hotel-carousel .nav-btn:hover, #motivos-carousel .nav-btn:hover { 
+  opacity:1;
+  box-shadow: 0 4px 10px rgba(0,0,0,.15); /* Sombra mais destacada no hover */
+}
+/* POSICIONAMENTO EXTERNO (Desktop e Mobile) */
+#hotel-carousel .nav-btn.left-1, #motivos-carousel .nav-btn.left-1 { left:-18px }
+#hotel-carousel .nav-btn.right-1, #motivos-carousel .nav-btn.right-1 { right:-18px }
+
+@media (min-width: 1024px) {
+    /* Empurra para fora dos limites do container principal */
+    #hotel-carousel .nav-btn.left-1, #motivos-carousel .nav-btn.left-1 { left:-40px; } 
+    #hotel-carousel .nav-btn.right-1, #motivos-carousel .nav-btn.right-1 { right:-40px; }
+}
+
+
+#hotel-carousel #track, #motivos-carousel #track2 { display:flex; gap:1rem; transition: transform 200ms ease; will-change: transform; }
+/* OCULTAR BOLINHAS (BULLETS) */
+#hotel-bullets, #motivos-bullets { display: none !important; }
+
+
+/* === CONTAINER PRINCIPAL (MAX-WIDTH 1100PX) === */
+.wt-main-container{
+  max-width: 1100px; /* Ajustado para 1100px */
+  margin: 0 auto;
+  padding: 0 16px; 
+}
+
+
+/* === REGRAS DE VISUALIZAÇÃO DOS CARDS (GRID/Tamanho) === */
+
+/* Mobile (1 card por vez: 100% - gap) */
+#hotel-carousel .hotel-card, #motivos-carousel .motivo {
+  min-width: calc(100% - 20px); /* 100% menos o gap de 1rem (16px) ou um pouco mais para garantir que deslize 1 de cada vez */
+}
+
+/* Desktop (4 Hotéis por vez) */
+@media (min-width: 1024px) {
+    #hotel-carousel .hotel-card {
+        /* Largura para 4 itens: (100% - 3 * gap) / 4 */
+        min-width: calc( (100% - (3 * 1rem)) / 4); 
+    }
+}
+
+/* Desktop (3 Motivos por vez) */
+@media (min-width: 1024px) {
+    #motivos-carousel .motivo {
+        /* Largura para 3 itens: (100% - 2 * gap) / 3 */
+        min-width: calc( (100% - (2 * 1rem)) / 3);
+    }
+}
+
+
+/* === ESTILIZAÇÃO DE TÍTULOS E TEXTOS DO CARROSSEL === */
+
+/* Hotéis: Título (section-title) e Texto (section-lead) */
+#hotel-carousel .section-title, 
+#motivos-carousel .section-title {
+    /* Herda o estilo do section-title, mas alinha à esquerda para títulos de cards */
+    text-align: center; /* Mantém o alinhamento central */
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    margin: 0 0 8px 0;
+}
+
+#hotel-carousel .section-lead,
+#motivos-carousel .section-lead {
+    /* Herda o estilo do section-lead */
+    max-width: 820px;
+    margin: 0 auto 18px;
+    text-align: center;
+    color: var(--muted);
+}
+
+/* Estilo do título do CARD do HOTEL e MOTIVO para ficar como h3 */
+.hotel-card h3,
+.motivo h3 {
+    /* Mantém estilo similar ao section-title, mas em fonte menor */
+    font-size: 18px; /* ligeiramente menor que o section-title */
+    font-weight: 900;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+/* CORRIGIDO: Redução do tamanho da fonte do título do hotel */
+.hotel-card h3 {
+  font-size: 15px; /* Redução do título do hotel */
+}
+
+/* Estilo do corpo do card do MOTIVO para parecer com section-lead */
+.motivo p {
+    color: var(--muted) !important; /* Força a cor do section-lead */
+    font-size: 14px;
+    line-height: 1.55;
+    text-align: center; /* Centraliza o texto do motivo */
+}
+/* Estilo para o bloco de texto combinado (Descrição + Distância/Preço) */
+.hotel-card-body-text {
+  color: var(--muted) !important; /* Força a cor do section-lead */
+  font-size: 14px; /* Tamanho do corpo de texto */
+  line-height: 1.35;
+  text-align: center;
+  /* Garante que o texto tenha o estilo de fonte normal da página */
+  font-family: Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 400; 
+}
+.hotel-card-body-text em {
+    font-weight: 600; /* Destaque em itálico para Distância */
+    font-style: italic;
+}
+.hotel-card-body-text strong {
+    font-weight: 900; /* Destaque em negrito para Preço */
+}
