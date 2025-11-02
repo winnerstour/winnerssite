@@ -1,6 +1,6 @@
 // assets/js/index-categories.js
-// Renderiza seções por categoria (category_macro) com carrossel + mantém grid completo abaixo.
-// Depende de: assets/js/carousel-lite.js
+// Render categorias (category_macro) ordenadas por quantidade DESC, carrossel com dots-only + wheel + autoplay.
+// Mantém grid completo abaixo. CSS fica inline na página.
 (function(){
   // Helpers BASE se não existir base-path.js
   (function ensureBase(){
@@ -12,12 +12,12 @@
     window.pageUrl = function(page){ if (!page) return base; if (page.startsWith('/')) page = page.slice(1); return base + page; };
   })();
 
-  const GRID_SEL = '#eventsGrid';           // grid já existente
-  const WRAP_SEL = '#categoryWrap';         // container acima do grid para as categorias
-  const AUTOPLAY_MS = 4000;                 // tempo do autoplay
-  const MAX_PER_CATEGORY = 12;              // limite para não estourar
+  const GRID_SEL = '#eventsGrid';
+  const WRAP_SEL = '#categoryWrap';
+  const AUTOPLAY_MS = 4000;
+  const MAX_PER_CATEGORY = 20; // mostra bastante quando categoria é grande
 
-  function by(arr, key){ 
+  function groupBy(arr, key){
     return arr.reduce((acc, it) => {
       const k = (it[key] || 'Outros').trim();
       (acc[k] = acc[k] || []).push(it);
@@ -49,10 +49,6 @@
       <section class="cat-section" data-component="carousel-lite" tabindex="0">
         <div class="cat-header">
           <h2 class="cat-title">${category}</h2>
-          <div class="cat-actions">
-            <button class="cl-btn" data-action="prev" aria-label="Anterior">◀</button>
-            <button class="cl-btn" data-action="next" aria-label="Próximo">▶</button>
-          </div>
         </div>
         <div class="cl-track" data-role="track">
           ${slides}
@@ -62,11 +58,11 @@
     `;
   }
 
-  function bootCarousels(root){
+  function bootCarousels(){
     (window.__CAROUSELS__||[]).forEach(c => c._autoStop());
     window.__CAROUSELS__ = [];
     document.querySelectorAll('[data-component="carousel-lite"]').forEach(rootEl => {
-      const instance = new CarouselLite(rootEl, { autoplayMs: AUTOPLAY_MS });
+      const instance = new CarouselLite(rootEl, { autoplayMs: AUTOPLAY_MS, wheel: true });
       window.__CAROUSELS__.push(instance);
     });
   }
@@ -77,20 +73,21 @@
     if (!res.ok) throw new Error('index.json não encontrado');
     const events = await res.json();
 
-    // 1) Render categorias acima do grid
+    // ORDER: categorias por quantidade desc
+    const groups = groupBy(events, 'category_macro');
+    const orderedCats = Object.keys(groups).sort((a,b)=> groups[b].length - groups[a].length);
+
+    // Render categorias
     const wrap = document.querySelector(WRAP_SEL) || (function(){
       const m = document.querySelector('main') || document.body;
       const sec = document.createElement('section');
       sec.id = 'categoryWrap';
-      m.insertBefore(sec, m.firstChild.nextSibling); // depois do primeiro filho (ex.: H1)
+      m.insertBefore(sec, m.firstChild.nextSibling);
       return sec;
     })();
+    wrap.innerHTML = orderedCats.map(cat => sectionHTML(cat, groups[cat])).join('');
 
-    const groups = by(events, 'category_macro'); // << usar setor principal do evento
-    const html = Object.keys(groups).sort().map(cat => sectionHTML(cat, groups[cat])).join('');
-    wrap.innerHTML = html;
-
-    // 2) Render grid original (se quiser manter)
+    // Render grid completo
     const grid = document.querySelector(GRID_SEL);
     if (grid) {
       grid.innerHTML = events.map(ev => `
@@ -104,13 +101,10 @@
       `).join('');
     }
 
-    // 3) Ativar carrosséis
-    bootCarousels(wrap);
+    bootCarousels();
   }
 
-  document.addEventListener('DOMContentLoaded', function(){
-    loadAndRender().catch(err => {
-      console.error('Falha ao carregar/renderizar categorias:', err);
-    });
+  document.addEventListener('DOMContentLoaded', () => {
+    loadAndRender().catch(err => console.error('Falha ao renderizar categorias:', err));
   });
 })();

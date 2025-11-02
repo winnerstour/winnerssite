@@ -1,16 +1,19 @@
 // assets/js/carousel-lite.js
-// Minimal horizontal carousel: scroll-snap based, arrows, dots, autoplay, pause on hover.
-// Usage: new CarouselLite(rootEl, { autoplayMs: 4000, slidesPerView: {default:1, md:3, lg:4} })
+// Minimal carousel: snap per page, dots, autoplay, pause on hover, keyboard, drag, wheel.
+// Arrows are optional (not required in your case). Hide scrollbars via CSS in page.
 (function(global){
   function qs(sel, ctx){ return (ctx||document).querySelector(sel); }
   function qsa(sel, ctx){ return Array.from((ctx||document).querySelectorAll(sel)); }
+
+  function debounce(fn, ms){ let t; return function(){ clearTimeout(t); t=setTimeout(fn, ms); }; }
 
   function CarouselLite(root, opts){
     this.root = root;
     this.opts = Object.assign({
       autoplayMs: 4000,
       pauseOnHover: true,
-      dots: true
+      dots: true,
+      wheel: true
     }, opts || {});
     this.track  = qs('[data-role="track"]', root);
     this.prev   = qs('[data-action="prev"]', root);
@@ -57,16 +60,45 @@
     // Keyboard
     this.root.addEventListener('keydown', function(e){
       if (e.key === 'ArrowLeft')  { e.preventDefault(); self._prev(); self._autoReset(); }
-      if (e.key === 'ArrowRight') { e.preventDefault(); self._next(); self._autoReset(); }
+      if (e.key === 'ArrowRight'){ e.preventDefault(); self._next(); self._autoReset(); }
     });
+
+    // Drag / swipe
+    let isDown = false, startX = 0, startScroll = 0;
+    this.track.addEventListener('pointerdown', (e) => {
+      isDown = true; startX = e.clientX; startScroll = this.track.scrollLeft;
+      this.track.setPointerCapture(e.pointerId);
+      this.root.classList.add('is-dragging');
+    });
+    this.track.addEventListener('pointermove', (e) => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      this.track.scrollLeft = startScroll - dx;
+    });
+    const snapAfterDrag = () => { if (!isDown) this._goTo(this._idxFromScroll()); };
+    this.track.addEventListener('pointerup',   () => { isDown=false; this.root.classList.remove('is-dragging'); snapAfterDrag(); });
+    this.track.addEventListener('pointercancel',() => { isDown=false; this.root.classList.remove('is-dragging'); });
+
+    // Wheel (principal interação no desktop)
+    if (this.opts.wheel){
+      const snapAfterWheel = debounce(() => { this._goTo(this._idxFromScroll()); }, 120);
+      this.track.addEventListener('wheel', (e) => {
+        // horizontal scroll com a roda; prevenimos o scroll da página
+        e.preventDefault();
+        const delta = (Math.abs(e.deltaY) > Math.abs(e.deltaX)) ? e.deltaY : e.deltaX;
+        this.track.scrollLeft += delta;
+        snapAfterWheel();
+        this._autoReset();
+      }, { passive: false });
+    }
 
     // Sync on scroll/resize
     let t;
-    this.track.addEventListener('scroll', function(){
+    this.track.addEventListener('scroll', () => {
       clearTimeout(t);
-      t = setTimeout(function(){ self._updateUI(self._idxFromScroll()); }, 100);
+      t = setTimeout(() => this._updateUI(this._idxFromScroll()), 100);
     });
-    new ResizeObserver(function(){ self._updateUI(self._idxFromScroll()); }).observe(this.track);
+    new ResizeObserver(() => this._updateUI(this._idxFromScroll())).observe(this.track);
   };
 
   CarouselLite.prototype._buildDots = function(){
@@ -89,7 +121,7 @@
     const slides = this._slides();
     if (this.next) this.next.disabled = (i >= slides.length-1);
     if (this.dotsEl){
-      qsa('.cl-dot', this.dotsEl).forEach(function(d, idx){
+      qsa('.cl-dot', this.dotsEl).forEach((d, idx) => {
         d.classList.toggle('is-active', idx === i);
         d.setAttribute('aria-current', idx === i ? 'true':'false');
       });
@@ -97,30 +129,21 @@
   };
 
   CarouselLite.prototype._auto = function(){
-    const self = this;
     if (!this.opts.autoplayMs) return;
     this._autoStop();
-    this.timer = setInterval(function(){
-      const slides = self._slides();
+    this.timer = setInterval(() => {
+      const slides = this._slides();
       if (!slides.length) return;
-      const nextIdx = self._idxFromScroll()+1;
-      if (nextIdx >= slides.length) {
-        // loop para o início
-        self._goTo(0);
-      } else {
-        self._goTo(nextIdx);
-      }
+      const nextIdx = this._idxFromScroll()+1;
+      if (nextIdx >= slides.length) this._goTo(0);
+      else this._goTo(nextIdx);
     }, this.opts.autoplayMs);
   };
 
   CarouselLite.prototype._autoStop = function(){
     if (this.timer){ clearInterval(this.timer); this.timer = null; }
   };
-
-  CarouselLite.prototype._autoReset = function(){
-    this._autoStop();
-    this._auto();
-  };
+  CarouselLite.prototype._autoReset = function(){ this._autoStop(); this._auto(); };
 
   global.CarouselLite = CarouselLite;
 })(window);
