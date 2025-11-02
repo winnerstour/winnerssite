@@ -10,30 +10,48 @@
   <link rel="stylesheet" href="assets/css/base.css">
   <link rel="stylesheet" href="assets/css/overrides.css">
 
-<!-- PATCH: carousel no-clip + black topbar title + black WhatsApp -->
+<!-- PATCH v2: topbar one-source-of-truth + WhatsApp green + outlined black label + no-clip carousel -->
 <style>
-/* Evitar corte lateral nos carrosséis */
-.cat-section{ overflow: visible !important; }
-.cl-track{ overflow-x: auto; overflow-y: visible !important; padding-inline: 16px !important; scroll-padding-inline: 16px !important; }
-.cl-track > .cl-slide{ padding-inline: 8px !important; }  /* espaço para hover sem cortar */
-.cat-section .card{ will-change: transform; } /* performance */
+/* 1) Garantir uma única barra visível: esconde logo central se existir */
+.logo-center{ display:none !important; }
 
-/* Título preto na barra (menu-label e/ou logo-center) */
-.menu-label{ color: #000 !important; }
-.logo-center{ color: #000 !important; }
+/* 2) Título preto com contorno branco (lado esquerdo) */
+.menu-label{
+  color:#000 !important;
+  -webkit-text-stroke:1px #fff !important;
+  text-stroke:1px #fff !important;
+  font-weight:900 !important;
+  letter-spacing:.06em;
+}
 
-/* WhatsApp: preto sólido, sem contorno/blur */
+/* 3) Botão WhatsApp verde com label preto contornado de branco; ícone permanece branco */
 .btn.btn-whatsapp{
-  background: #000 !important; color: #fff !important;
-  box-shadow: none !important; border: 1px solid #000 !important;
-  -webkit-backdrop-filter: none !important; backdrop-filter: none !important; filter: none !important;
+  background:#25D366 !important;
+  border:2px solid #fff !important;
+  box-shadow:none !important;
+  -webkit-backdrop-filter:none !important; backdrop-filter:none !important; filter:none !important;
 }
-.btn.btn-whatsapp svg{ width: 18px; height:18px; color:#fff; fill: currentColor; }
+.btn.btn-whatsapp .label{
+  color:#000 !important;
+  -webkit-text-stroke:1px #fff !important;
+  text-stroke:1px #fff !important;
+  font-weight:900 !important;
+  letter-spacing:.04em;
+}
+.btn.btn-whatsapp svg{ width:18px; height:18px; color:#fff; fill:currentColor; }
 
-/* Reforço: sem blur/filters na topbar e descendentes */
+/* 4) Anti-blur geral na topbar para evitar sobreposição de filtros */
 .topbar, .topbar *{
-  -webkit-backdrop-filter: none !important; backdrop-filter: none !important; filter: none !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
 }
+
+/* 5) Evitar corte lateral nos carrosséis em hover */
+.cat-section{ overflow:visible !important; }
+.cl-track{ overflow-x:auto; overflow-y:visible !important; padding-inline:16px !important; scroll-padding-inline:16px !important; }
+.cl-track > .cl-slide{ padding-inline:8px !important; }
 </style>
 
 </head>
@@ -49,5 +67,24 @@
   </main>
   <footer class="footer container">&copy; WinnersTour</footer>
   <script src="assets/js/event-page.js" defer></script>
+
+<!-- PATCH v2 script: força label à esquerda e remove "MENU" se ainda existir -->
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const agency = 'WINNERS TOUR'; // altere aqui se quiser outro nome
+  const label = document.querySelector('.menu-label');
+  if(label){
+    if(label.textContent.trim().toUpperCase() !== agency){
+      label.textContent = agency;
+    }
+  }
+  // sanity: se existir mais de uma barra, esconda as subsequentes
+  const bars = document.querySelectorAll('#indexTopBar.topbar');
+  if(bars.length > 1){
+    bars.forEach((el, i)=>{ if(i>0) el.style.display = 'none'; });
+  }
+});
+</script>
+
 </body>
 </html>
