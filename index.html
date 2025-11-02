@@ -14,7 +14,80 @@
   <!-- Widget de busca (mantido) -->
   <link rel="stylesheet" href="https://static.onertravel.com/widget/search/production/styles.css">
 
-  <!-- BEGIN: Winners — Categories Carousel Head -->
+  <!-- Estilos mínimos e isolados da TOPBAR + HOVER dos cards (não interfere no seu base.css) -->
+  <style>
+    :root{
+      --wt-orange:#f86f2d;
+      --wt-green:#20c070;
+      --wt-dark:#0c1421;
+      --wt-hover:#edf1f5; /* cinza médio para hover */
+    }
+    /* TOPBAR */
+    .wt-topbar{
+      position: sticky; top:0; z-index: 1000;
+      width:100%; background:var(--wt-orange);
+      box-shadow: 0 2px 0 rgba(0,0,0,.06);
+    }
+    .wt-topbar__inner{
+      max-width: 1200px; margin:0 auto; height:64px;
+      display:grid; grid-template-columns: 1fr auto 1fr; align-items:center;
+      gap:12px; padding:0 16px;
+    }
+    /* Botão MENU (hambúrguer + label) à esquerda */
+    .wt-menu-btn{
+      display:inline-flex; align-items:center; gap:10px;
+      background:#ff915d; color:#fff; font-weight:800;
+      font-family: Montserrat, system-ui, Arial, sans-serif;
+      border-radius: 20px; padding:8px 14px; border:none; cursor:pointer;
+      text-transform: uppercase; letter-spacing: .6px;
+    }
+    .wt-burger{ width:20px; height:14px; position:relative; }
+    .wt-burger, .wt-burger::before, .wt-burger::after{
+      display:block; background:#fff; height:2px; border-radius:2px; content:"";
+      position:absolute; left:0; right:0;
+    }
+    .wt-burger{ top:6px; }
+    .wt-burger::before{ top:-6px; }
+    .wt-burger::after{ top:6px; }
+
+    /* Marca centralizada com contorno preto */
+    .wt-brand{
+      text-align:center; user-select:none;
+      font-family: Montserrat, system-ui, Arial, sans-serif;
+      font-weight:800; font-size:20px; line-height:1;
+      color:#fff; text-transform: uppercase; letter-spacing: .8px;
+      /* contorno preto sem exagero */
+      -webkit-text-stroke: 1.2px #000;
+      text-shadow:
+        1px 1px 0 #000, -1px 1px 0 #000,
+        1px -1px 0 #000, -1px -1px 0 #000;
+    }
+
+    /* Botão WhatsApp à direita */
+    .wt-wa{
+      justify-self:end;
+      display:inline-flex; align-items:center; gap:10px;
+      background:var(--wt-green); color:#fff; font-weight:800;
+      font-family: Montserrat, system-ui, Arial, sans-serif;
+      border-radius: 999px; padding:10px 14px; text-decoration:none;
+      text-transform: uppercase; letter-spacing:.6px;
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,.12);
+    }
+    .wt-wa svg{ width:18px; height:18px; }
+
+    /* grade do conteúdo compatível com seu layout atual */
+    main{ max-width:1200px; margin: 18px auto 64px; padding: 0 16px; }
+
+    /* Hover suave nos cards (não mexe na regra original, só adiciona) */
+    .event-card:hover, .card:hover{
+      background: var(--wt-hover);
+      transition: background .15s ease;
+    }
+
+    /* Espaço após a topbar para evitar sobreposição */
+    .wt-topbar-spacer{ height: 8px; }
+  </style>
+<!-- BEGIN: Winners — Categories Carousel Head -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -89,9 +162,36 @@ html,body{ font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetic
 body{ scroll-padding-top:64px; }
 
 </style>
+
+<!-- PATCH: carousel no-clip + black topbar title + black WhatsApp -->
+<style>
+/* Evitar corte lateral nos carrosséis */
+.cat-section{ overflow: visible !important; }
+.cl-track{ overflow-x: auto; overflow-y: visible !important; padding-inline: 16px !important; scroll-padding-inline: 16px !important; }
+.cl-track > .cl-slide{ padding-inline: 8px !important; }  /* espaço para hover sem cortar */
+.cat-section .card{ will-change: transform; } /* performance */
+
+/* Título preto na barra (menu-label e/ou logo-center) */
+.menu-label{ color: #000 !important; }
+.logo-center{ color: #000 !important; }
+
+/* WhatsApp: preto sólido, sem contorno/blur */
+.btn.btn-whatsapp{
+  background: #000 !important; color: #fff !important;
+  box-shadow: none !important; border: 1px solid #000 !important;
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important; filter: none !important;
+}
+.btn.btn-whatsapp svg{ width: 18px; height:18px; color:#fff; fill: currentColor; }
+
+/* Reforço: sem blur/filters na topbar e descendentes */
+.topbar, .topbar *{
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important; filter: none !important;
+}
+</style>
+
 </head>
 <body>
-<div id="indexTopBar" class="topbar"><div class="topbar__inner"><div class="menu-area"><div class="menu-button" id="menuBtn"><div class="burger"><div></div></div><span class="menu-label">MENU</span></div></div><div class="logo-center">WINNERS TOUR</div><div class="topbar__cta"><a class="btn btn-whatsapp" target="_blank" rel="noopener" href="https://wa.me/5541999450111?text=Ol%C3%A1!%20Quero%20ajuda%20com%20minha%20reserva%20ou%20um%20or%C3%A7amento."><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M19.11 17.26c-.28-.14-1.64-.81-1.9-.9-.26-.1-.45-.14-.64.14-.19.29-.73.9-.9 1.09-.17.19-.35.21-.64.07-.28-.14-1.17-.43-2.22-1.37-.82-.73-1.38-1.63-1.54-1.91-.16-.29-.02-.45.12-.59.12-.12.28-.31.42-.47.14-.16.19-.28.28-.47.09-.19.05-.36-.02-.5-.07-.14-.64-1.54-.88-2.1-.23-.56-.47-.48-.64-.49l-.55-.01c-.19 0-.5.07-.76.36s-.99.97-.99 2.36 1.02 2.74 1.16 2.93c.14.19 2 3.05 4.84 4.28.68.29 1.21.46 1.62.59.68.22 1.3.19 1.79.12.55-.08 1.64-.67 1.87-1.31.23-.64.23-1.19.16-1.31-.07-.12-.25-.19-.53-.33zM16.05 3C9.93 3 5 7.93 5 14.05c0 2.34.68 4.53 1.85 6.37L5 29l8.81-1.83c1.79 1.1 3.9 1.74 6.24 1.74 6.12 0 11.05-4.93 11.05-11.05S22.17 3 16.05 3zm0 20.25c-1.94 0-3.74-.57-5.25-1.55l-.38-.24-3.12.65.65-3.04-.25-.39a9.22 9.22 0 0 1-1.55-5.27c0-5.1 4.15-9.25 9.25-9.25s9.25 4.15 9.25 9.25-4.15 9.25-9.25 9.25z"/></svg><span class="label">WHATSAPP</span></a></div></div></div>
+<div id="indexTopBar" class="topbar"><div class="topbar__inner"><div class="menu-area"><div class="menu-button" id="menuBtn"><div class="burger"><div></div></div><span class="menu-label">MENU</span></div></div><div class="logo-center">WINNERS TOUR</div><div class="topbar__cta"><a class="btn btn-whatsapp" target="_blank" rel="noopener" href="https://wa.me/5541999450111?text=Ol%C3%A1!%20Quero%20ajuda%20com%20minha%20reserva%20ou%20um%20or%C3%A7amento."><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">       <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M19.11 17.26c-.28-.14-1.64-.81-1.9-.9-.26-.1-.45-.14-.64.14-.19.29-.73.9-.9 1.09-.17.19-.35.21-.64.07-.28-.14-1.17-.43-2.22-1.37-.82-.73-1.38-1.63-1.54-1.91-.16-.29-.02-.45.12-.59.12-.12.28-.31.42-.47.14-.16.19-.28.28-.47.09-.19.05-.36-.02-.5-.07-.14-.64-1.54-.88-2.1-.23-.56-.47-.48-.64-.49l-.55-.01c-.19 0-.5.07-.76.36s-.99.97-.99 2.36 1.02 2.74 1.16 2.93c.14.19 2 3.05 4.84 4.28.68.29 1.21.46 1.62.59.68.22 1.3.19 1.79.12.55-.08 1.64-.67 1.87-1.31.23-.64.23-1.19.16-1.31-.07-.12-.25-.19-.53-.33zM16.05 3C9.93 3 5 7.93 5 14.05c0 2.34.68 4.53 1.85 6.37L5 29l8.81-1.83c1.79 1.1 3.9 1.74 6.24 1.74 6.12 0 11.05-4.93 11.05-11.05S22.17 3 16.05 3zm0 20.25c-1.94 0-3.74-.57-5.25-1.55l-.38-.24-3.12.65.65-3.04-.25-.39a9.22 9.22 0 0 1-1.55-5.27c0-5.1 4.15-9.25 9.25-9.25s9.25 4.15 9.25 9.25-4.15 9.25-9.25 9.25z"/></svg><span class="label">WHATSAPP</span></a></div></div></div>
 
   <main>
     <!-- WIDGET DE BUSCA (mantido). Removi apenas o texto grande que você pediu para tirar -->
