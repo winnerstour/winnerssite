@@ -1,13 +1,9 @@
 // assets/js/index-categories.js
-// Render categorias (category_macro) ordenadas por quantidade DESC, carrossel com dots-only + wheel + autoplay.
-// Mantém grid completo abaixo. CSS fica inline na página.
 (function(){
-  // Helpers BASE se não existir base-path.js
   (function ensureBase(){
     if (window.asset && window.pageUrl) return;
     const parts = location.pathname.split('/').filter(Boolean);
-    let base = './';
-    if (parts.length) base = `/${parts[0]}/`;
+    let base = './'; if (parts.length) base = `/${parts[0]}/`;
     window.asset = function(path){ if (path.startsWith('/')) path = path.slice(1); return base + path; };
     window.pageUrl = function(page){ if (!page) return base; if (page.startsWith('/')) page = page.slice(1); return base + page; };
   })();
@@ -15,7 +11,7 @@
   const GRID_SEL = '#eventsGrid';
   const WRAP_SEL = '#categoryWrap';
   const AUTOPLAY_MS = 4000;
-  const MAX_PER_CATEGORY = 20; // mostra bastante quando categoria é grande
+  const MAX_PER_CATEGORY = 20;
 
   function groupBy(arr, key){
     return arr.reduce((acc, it) => {
@@ -47,15 +43,10 @@
     const slides = items.slice(0, MAX_PER_CATEGORY).map(cardHTML).join('');
     return `
       <section class="cat-section" data-component="carousel-lite" tabindex="0">
-        <div class="cat-header">
-          <h2 class="cat-title">${category}</h2>
-        </div>
-        <div class="cl-track" data-role="track">
-          ${slides}
-        </div>
+        <div class="cat-header"><h2 class="cat-title">${category}</h2></div>
+        <div class="cl-track" data-role="track">${slides}</div>
         <div class="cl-dots" data-role="dots"></div>
-      </section>
-    `;
+      </section>`;
   }
 
   function bootCarousels(){
@@ -73,21 +64,16 @@
     if (!res.ok) throw new Error('index.json não encontrado');
     const events = await res.json();
 
-    // ORDER: categorias por quantidade desc
     const groups = groupBy(events, 'category_macro');
     const orderedCats = Object.keys(groups).sort((a,b)=> groups[b].length - groups[a].length);
 
-    // Render categorias
     const wrap = document.querySelector(WRAP_SEL) || (function(){
       const m = document.querySelector('main') || document.body;
-      const sec = document.createElement('section');
-      sec.id = 'categoryWrap';
-      m.insertBefore(sec, m.firstChild.nextSibling);
-      return sec;
+      const sec = document.createElement('section'); sec.id = 'categoryWrap';
+      m.insertBefore(sec, m.firstChild.nextSibling); return sec;
     })();
     wrap.innerHTML = orderedCats.map(cat => sectionHTML(cat, groups[cat])).join('');
 
-    // Render grid completo
     const grid = document.querySelector(GRID_SEL);
     if (grid) {
       grid.innerHTML = events.map(ev => `
@@ -97,8 +83,7 @@
             <h3 class="title">${ev.title||ev.slug}</h3>
             ${ev.subtitle ? `<p class="subtitle">${ev.subtitle}</p>` : ''}
           </div>
-        </a>
-      `).join('');
+        </a>`).join('');
     }
 
     bootCarousels();
